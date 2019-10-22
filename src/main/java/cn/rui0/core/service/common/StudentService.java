@@ -1,10 +1,13 @@
 package cn.rui0.core.service.common;
 
+import cn.rui0.core.model.dto.common.student.UpdateInfoDTO;
 import cn.rui0.core.model.po.common.Exam;
 import cn.rui0.core.model.po.common.Exam_Room;
 import cn.rui0.core.model.po.common.Stu_Exam;
 import cn.rui0.core.model.po.common.User;
+import cn.rui0.core.model.vo.common.Exam_RoomVo;
 import cn.rui0.core.model.vo.common.ScoreVo;
+import cn.rui0.core.model.vo.common.Stu_ExamVo;
 
 import java.util.List;
 
@@ -15,11 +18,11 @@ public interface StudentService {
 
     /**
      * 考试报名
-     * @param number
-     * @param exam_room
+     * @param user
+     * @param exam_RoomVo
      * @return
      */
-    Integer sign_up(String number, Exam_Room exam_room);
+    Integer sign_up(User user, Exam_RoomVo exam_RoomVo);
     /**
      * 考试报名
      * @param name
@@ -31,7 +34,7 @@ public interface StudentService {
      * @param ex_number
      * @return
      */
-    Exam_Room getRoom(String ex_number);
+    Exam_RoomVo getRoom(String ex_number);
     /**
      * 查看个人信息
      * @param user
@@ -46,11 +49,11 @@ public interface StudentService {
     User FindNumber(User user);
     /**
      * 查看成绩
-     * @param number
+     * @param user
      * @param year
      * @return
      */
-    List<Stu_Exam> FindScore(String number, String year);
+    List<Stu_ExamVo> FindScore(User user, String year);
     /**
      * 查询成绩
      * @param number
@@ -58,4 +61,11 @@ public interface StudentService {
      * @return
      */
     ScoreVo query(String number, String name);
+    /**
+     * 修改个人信息
+     * @param student
+     * @param updateInfo
+     * @return
+     */
+    int updateInfo(User student, UpdateInfoDTO updateInfo);
 }

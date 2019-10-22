@@ -30,12 +30,16 @@ public class Exam extends BaseEntity {
     private int  amount;
     @OneToMany(mappedBy = "exam",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     private List<Exam_Room>exam_rooms;
+
+    public Exam(){
+
+    }
     public Exam(ExamDTO examDTO,String number,int ex_amount){
         this.name=examDTO.getName();
         this.time=examDTO.getTime();
         this.content=examDTO.getContent();
         this.stime=examDTO.getStime();
-        this.time=examDTO.getEtime();
+        this.etime=examDTO.getEtime();
         this.number=number;
         this.amount=ex_amount;
     }

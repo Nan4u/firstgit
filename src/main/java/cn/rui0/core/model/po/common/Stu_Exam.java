@@ -12,11 +12,12 @@ public class Stu_Exam extends BaseEntity {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private long id;
 
-
-    private String code;
+    @ManyToOne(cascade= CascadeType.ALL)
+    @JoinColumn(name = "code")
+    private User user;
     @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "exam_room_id")
-    private Exam_Room exam_room;
+    private Exam_Room examRoom;
 
     private String number;
 
@@ -26,9 +27,13 @@ public class Stu_Exam extends BaseEntity {
 
     private int writing;
 
-    public Stu_Exam(String code,Exam_Room ex_room,String se_number){
-        this.code=code;
-        this.exam_room=ex_room;
-        this.number=se_number;
+    private Boolean isPassed=false;
+    public Stu_Exam(){
+
+    }
+    public Stu_Exam(String number,Exam_Room ex_room,User user){
+        this.number=number;
+        this.examRoom=ex_room;
+        this.user=user;
     }
 }

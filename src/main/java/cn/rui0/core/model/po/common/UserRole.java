@@ -2,6 +2,7 @@ package cn.rui0.core.model.po.common;
 
 import cn.rui0.core.model.po.base.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;

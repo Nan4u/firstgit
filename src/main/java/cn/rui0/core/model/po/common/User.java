@@ -19,6 +19,7 @@ public class User extends BaseEntity {
 
     private String name;
 
+    private String sex;
     //@JSONField(serialize = false)
     private String pwd;
 
@@ -33,18 +34,23 @@ public class User extends BaseEntity {
     private String address;
 
     private String number;
+
+    private String imagePath;
     @JSONField(serialize = false)
     //管理员
     @OneToMany(mappedBy = "user",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     private List<Info> infos;//文章列表
+    @OneToMany(mappedBy = "user",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+    private List<Stu_Exam> stu_exams;//文章列表
     @JSONField(serialize = false)
     @OneToMany(targetEntity = UserRole.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<UserRole> roleList=new ArrayList<>();
     public User() {
     }
 
-    public User( String us_name, String us_pwd, String us_phone, String us_birthday, String us_identify, String us_college, String us_address, String number) {
+    public User( String us_name, String sex,String us_pwd, String us_phone, String us_birthday, String us_identify, String us_college, String us_address, String number) {
         this.name = us_name;
+        this.sex=sex;
         this.pwd = us_pwd;
         this.phone = us_phone;
         this.birthday = us_birthday;

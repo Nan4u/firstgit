@@ -22,7 +22,8 @@ public class Info extends BaseEntity {
     @ManyToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "us_number")
     private User user;
-
+    public Info() {
+    }
     public Info(AddInfoDTO addInfoDTO,User user){
         this.name=addInfoDTO.getName();
         this.title=addInfoDTO.getTitle();

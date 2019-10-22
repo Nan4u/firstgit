@@ -1,9 +1,13 @@
 package cn.rui0.core.service.common.impl;
 
 import cn.rui0.core.dao.common.*;
+import cn.rui0.core.model.dto.common.student.UpdateInfoDTO;
 import cn.rui0.core.model.po.common.*;
+import cn.rui0.core.model.vo.common.Exam_RoomVo;
 import cn.rui0.core.model.vo.common.ScoreVo;
+import cn.rui0.core.model.vo.common.Stu_ExamVo;
 import cn.rui0.core.service.common.StudentService;
+import org.hibernate.boot.spi.InFlightMetadataCollector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,13 +37,16 @@ public class StudentServiceImpl implements StudentService{
     @Autowired
     private UserRepo userRepo;
     @Override
-    public Integer sign_up(String number,  Exam_Room exam_room) {
+    public Integer sign_up(User user,  Exam_RoomVo exam_roomVo) {
         String er_number="33037";
+        String number=user.getNumber();
         String a = number.substring(4,8);
-        String b = String.valueOf(exam_room.getRoom().getRoom_id());
-        String c = String.valueOf(exam_room.getAmount());
-        er_number=er_number+a+b+c;
-        Stu_Exam stu_exam = new Stu_Exam(number,exam_room,er_number);
+        String b = String.valueOf(exam_roomVo.getRoom());
+        String c = b+"00";
+        c=String.valueOf(Integer.parseInt(c)+exam_roomVo.getAmount());
+        er_number=er_number+a+c;
+        Exam_Room exam_room =exam_roomRepo.findById(exam_roomVo.getRoom()).get();
+        Stu_Exam stu_exam = new Stu_Exam(er_number,exam_room,user);
         stu_examRepo.saveAndFlush(stu_exam);
         return 1;
     }
@@ -52,11 +59,21 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public Exam_Room getRoom(String ex_number) {
+    public Exam_RoomVo getRoom(String ex_number) {
+        long number = Long.parseLong(ex_number);
         List<Exam_Room> list = exam_roomRepo.findAll();
-        for(Exam_Room exam_room:list){
-            if(exam_room.getExam().getNumber().equals(ex_number)&&exam_room.getAmount()<40) {
-                return exam_room;
+        List<Exam_RoomVo> list1 = new ArrayList<>();
+            for(Exam_Room exam_room :list){
+                list1.add(new Exam_RoomVo(exam_room));
+            }
+            System.out.println(list1);
+        for(Exam_RoomVo exam_RoomVo:list1){
+            if(exam_RoomVo.getExam()==number&&exam_RoomVo.getAmount()<40) {
+                Exam_Room exam_room = exam_roomRepo.findById(exam_RoomVo.getId()).get();
+                exam_room.setAmount(exam_RoomVo.getAmount()+1);
+                exam_roomRepo.saveAndFlush(exam_room);
+                exam_RoomVo.setAmount(exam_room.getAmount());
+                return exam_RoomVo;
             }
         }
         return null;
@@ -75,18 +92,23 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public List<Stu_Exam> FindScore(String number, String year) {
-        List<Stu_Exam> list = stu_examRepo.findByCode(number);
-        List<Stu_Exam> list2 = new ArrayList<>();
+    public List<Stu_ExamVo> FindScore(User user, String year) {
+        List<Stu_Exam> list = stu_examRepo.findByUser(user);
+        List<Stu_ExamVo> list2 = new ArrayList<>();
         for(Stu_Exam stu_exam:list){
-            String time=stu_exam.getExam_room().getExam().getTime();
-            String y = time.substring(0,4);
-            if(!y.equals(year)){
-                list2.add(stu_exam);
+            String isPassed="未通过";
+            if(stu_exam.getIsPassed())
+                isPassed="通过";
+            if(!year.equals("")) {
+                String y = stu_exam.getExamRoom().getExam().getTime();
+                y = y.substring(0, 4);
+                if (y.equals(year))
+                    list2.add(new Stu_ExamVo(stu_exam, isPassed, ""));
+            }else {
+                list2.add(new Stu_ExamVo(stu_exam, isPassed, ""));
             }
         }
-        list.removeAll(list2);
-        return list;
+        return list2;
     }
 
     @Override
@@ -96,14 +118,26 @@ public class StudentServiceImpl implements StudentService{
         if(stu_exam==null){
             return null;
         }else {
-           User user = userRepo.findByNumber(stu_exam.getCode());
+           User user = stu_exam.getUser();
            if(user.getName().equals(name)) {
                ScoreVo scoreVo = new ScoreVo(name,user.getCollege(),number,
                        stu_exam.getHearing()+stu_exam.getReading()+stu_exam.getWriting(),
-                       stu_exam.getReading(),stu_exam.getReading(),stu_exam.getWriting());
+                       stu_exam.getReading(),stu_exam.getHearing(),stu_exam.getWriting());
                return scoreVo;
            }else
                return  null;
         }
+    }
+
+    @Override
+    public int updateInfo(User student, UpdateInfoDTO updateInfo) {
+        student.setName(updateInfo.getName());
+        student.setCollege(updateInfo.getCollege());
+        student.setSex(updateInfo.getSex());
+        student.setBirthday(updateInfo.getBirthday());
+        student.setPhone(updateInfo.getPhone());
+        student.setAddress(updateInfo.getAddress());
+        userRepo.saveAndFlush(student);
+        return  1;
     }
 }

@@ -24,8 +24,6 @@ public class UserRegisterDTO {
 
     private String identify;
 
-    private String realname;
-
     private String college;
 
     private String address;

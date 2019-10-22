@@ -32,10 +32,12 @@ public class UserVo {
 
     private String number;
 
+    private String imagePath;
     private List<String> roleList=new ArrayList<>();
 
-    public UserVo(User user) {
-        this.id=user.getId();
+
+     public UserVo(User user) {
+       this.id=user.getId();
         this.name = user.getName();
         this.phone = user.getPhone();
         this.birthday = user.getBirthday();
@@ -43,6 +45,7 @@ public class UserVo {
         this.college = user.getCollege();
         this.address = user.getAddress();
         this.number = user.getNumber();
+        this.imagePath=user.getImagePath();
         for (UserRole roles:user.getRoleList()) {
             this.roleList.add(roles.getRole());
         }

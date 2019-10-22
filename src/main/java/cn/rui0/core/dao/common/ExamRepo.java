@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ExamRepo extends JpaRepository<Exam, Long> {
     List<Exam> findByName(String name);
+
+    List<Exam> findByNameLike(String name);
 }

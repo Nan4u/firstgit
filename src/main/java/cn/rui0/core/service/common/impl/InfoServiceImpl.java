@@ -5,12 +5,14 @@ import cn.rui0.core.dao.common.UserRepo;
 import cn.rui0.core.model.dto.common.admin.AddInfoDTO;
 import cn.rui0.core.model.po.common.Info;
 import cn.rui0.core.model.po.common.User;
+import cn.rui0.core.model.vo.common.InfoVo;
 import cn.rui0.core.service.common.InfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,8 +32,12 @@ public class InfoServiceImpl implements InfoService {
     }
 
     @Override
-    public List<Info> ShowAll() {
+    public List<InfoVo> ShowAll() {
         List<Info> list = infoRepo.findAll();
-        return list;
+        List<InfoVo> list2 = new ArrayList<>();
+        for(Info info:list){
+            list2.add(new InfoVo(info));
+        }
+        return list2;
     }
 }

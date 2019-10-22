@@ -1,5 +1,6 @@
 package cn.rui0.core.model.dto.common.exam;
 
+import cn.rui0.core.model.po.common.Room;
 import lombok.Data;
 
 import java.util.List;
@@ -12,5 +13,5 @@ public class ExamDTO {
     private String content;
     private String stime;
     private String etime;
-    private List room;
+    private List<Room> room;
 }

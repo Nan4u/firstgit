@@ -3,18 +3,17 @@ package cn.rui0.core.service.common.impl;
 import cn.rui0.common.util.Encrypt;
 import cn.rui0.common.util.Identify;
 import cn.rui0.common.util.JwtUtil;
-import cn.rui0.core.dao.common.StudentRepo;
 import cn.rui0.core.dao.common.TotalRepo;
 import cn.rui0.core.dao.common.UserRepo;
 import cn.rui0.core.dao.common.UserRoleRepo;
 import cn.rui0.core.model.dto.common.user.IdentifyDTO;
 import cn.rui0.core.model.dto.common.user.UpdateUserDTo;
 import cn.rui0.core.model.dto.common.user.UserRegisterDTO;
-import cn.rui0.core.model.po.common.Student;
 import cn.rui0.core.model.po.common.Total;
 import cn.rui0.core.model.po.common.User;
 import cn.rui0.core.model.po.common.UserRole;
 import cn.rui0.core.model.vo.common.IdentifyVo;
+import cn.rui0.core.model.vo.common.UserInfoVo;
 import cn.rui0.core.model.vo.common.UserVo;
 import cn.rui0.core.service.common.UserService;
 import com.alibaba.fastjson.JSON;
@@ -65,7 +64,7 @@ public class UserServiceImpl implements UserService{
         String number = String.valueOf(Default_Number + ID);
         total.setNumber(ID+1);
         User user=new User(userRegisterDTO.getUsername(),userRegisterDTO.getSex(),
-                userRegisterDTO.getPhone(),userRegisterDTO.getBirthday(),userRegisterDTO.getIdentify(),
+                Encrypt.md5(userRegisterDTO.getPassword()),  userRegisterDTO.getPhone(),userRegisterDTO.getBirthday(),Encrypt.base64Decode(userRegisterDTO.getIdentify()),
                 userRegisterDTO.getCollege(),userRegisterDTO.getAddress(),number);
         userRepo.saveAndFlush(user);
         UserRole userRole=new UserRole();
@@ -83,24 +82,29 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public IdentifyVo identify(UserRegisterDTO userRegisterDTO) {
+    public IdentifyVo identify(IdentifyDTO identifyDTO) {
         Identify identify = new Identify();
         IdentifyVo identifyVo = new IdentifyVo();
-        String check = identify.Check(userRegisterDTO.getIdentify(),userRegisterDTO.getRealname());
+        String check = identify.Check(identifyDTO.getIdCard(),identifyDTO.getName());
         Map maps = (Map) JSON.parse(check);
        identifyVo.setMessage(maps.get("message").toString());
        if(maps.get("result")!=null) {
            Map maps2 = (Map)maps.get("result");
            identifyVo.setRes(maps2.get("res").toString());
+           identifyVo.setCardID(Encrypt.base64Encode(identifyDTO.getIdCard()));
+           identifyVo.setName(identifyDTO.getName());
        }
         return identifyVo;
     }
 
     @Override
-    public List<User> getUser() {
-        List<User> list = new ArrayList<>();
-        list = userRepo.findAll();
-        return list;
+    public List<UserInfoVo> getUser() {
+        List<User> list = userRepo.findAll();
+        List<UserInfoVo> list2 = new ArrayList<>();
+        for(User user:list){
+            list2.add(new UserInfoVo(user));
+        }
+        return list2;
     }
 
     @Override

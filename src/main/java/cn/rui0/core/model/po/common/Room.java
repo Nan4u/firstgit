@@ -19,7 +19,9 @@ public class Room {
 
     @OneToMany(mappedBy = "room",cascade= CascadeType.ALL,fetch=FetchType.LAZY)
     private List<Exam_Room> exam_rooms;
+    public Room(){
 
+    }
     public Room(RoomDTO roomDTO,String ro_person){
         this.name=roomDTO.getName();
         this.person=ro_person;

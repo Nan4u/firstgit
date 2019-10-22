@@ -22,7 +22,7 @@ public class Exam_Room extends BaseEntity {
 
     private int amount;
 
-    @OneToMany(mappedBy = "exam_room",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+    @OneToMany(mappedBy = "examRoom",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     private List<Stu_Exam> Stu_Exam ;
 
 }

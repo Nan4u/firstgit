@@ -5,6 +5,7 @@ import cn.rui0.core.model.dto.common.user.UpdateUserDTo;
 import cn.rui0.core.model.dto.common.user.UserRegisterDTO;
 import cn.rui0.core.model.po.common.User;
 import cn.rui0.core.model.vo.common.IdentifyVo;
+import cn.rui0.core.model.vo.common.UserInfoVo;
 import cn.rui0.core.model.vo.common.UserVo;
 
 import java.util.List;
@@ -22,9 +23,9 @@ public interface UserService {
     User findByUserId(Long id);
 
 
-    IdentifyVo identify(UserRegisterDTO userRegisterDTO);
+    IdentifyVo identify(IdentifyDTO identifyDTO);
 
-    List<User>getUser();
+    List<UserInfoVo> getUser();
 
     //修改用户信息
     int updateUser(UpdateUserDTo updateUserDTo);

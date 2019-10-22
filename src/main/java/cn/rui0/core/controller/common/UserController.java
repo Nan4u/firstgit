@@ -5,12 +5,14 @@ import cn.rui0.common.bean.ResponseResult;
 import cn.rui0.common.security.annotation.Access;
 import cn.rui0.common.security.annotation.CurrentUser;
 import cn.rui0.common.util.JwtUtil;
+import cn.rui0.core.model.dto.common.user.IdentifyDTO;
 import cn.rui0.core.model.dto.common.user.QueryDTO;
 import cn.rui0.core.model.dto.common.user.UserLoginDTO;
 import cn.rui0.core.model.dto.common.user.UserRegisterDTO;
 import cn.rui0.core.model.po.common.Info;
 import cn.rui0.core.model.po.common.User;
 import cn.rui0.core.model.vo.common.IdentifyVo;
+import cn.rui0.core.model.vo.common.InfoVo;
 import cn.rui0.core.model.vo.common.ScoreVo;
 import cn.rui0.core.model.vo.common.UserVo;
 import cn.rui0.core.service.common.InfoService;
@@ -41,23 +43,19 @@ public class UserController {
     private InfoService infoService;
     @Autowired
     private StudentService studentService;
-//    @PostMapping(value = "/identify")
-//    @ApiOperation(value = "身份证验证")
-//    public  ResponseResult identify(@RequestBody IdentifyDTO identifyDTO){
-//        IdentifyVo identifyVo = userService.identify(identifyDTO);
-//        return ResponseResult.e(ResponseCode.OK, identifyVo);
-//    }
+    @PostMapping(value = "/identify")
+    @ApiOperation(value = "身份证验证")
+    public  ResponseResult identify(@RequestBody IdentifyDTO identifyDTO){
+        IdentifyVo identifyVo = userService.identify(identifyDTO);
+        return ResponseResult.e(ResponseCode.OK, identifyVo);
+    }
     @PostMapping(value = "/register")
     @ApiOperation(value = "注册")
     public ResponseResult register(@RequestBody UserRegisterDTO userRegisterDTO){
-        IdentifyVo identifyVo = userService.identify(userRegisterDTO);
-        if(identifyVo.getRes().equals("1")){
             int status = userService.register(userRegisterDTO);
             if (status==1)
                 return ResponseResult.e(ResponseCode.OK);
             return ResponseResult.e(ResponseCode.FAIL);
-        }
-        return ResponseResult.e(ResponseCode.OK, identifyVo);
     }
     @PostMapping(value = "/query")
     @ApiOperation(value = "查询")
@@ -81,7 +79,7 @@ public class UserController {
     @PostMapping(value = {"/ShowInfo"})
     @ApiOperation(value = "信息展示")
     public ResponseResult ShowInfo() {
-        List<Info> info = infoService.ShowAll();
+        List<InfoVo> info = infoService.ShowAll();
         return ResponseResult.e(ResponseCode.OK,info);
     }
 //    @PostMapping(value = "/current")

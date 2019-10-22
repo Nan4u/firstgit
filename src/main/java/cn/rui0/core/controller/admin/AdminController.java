@@ -11,6 +11,8 @@ import cn.rui0.core.model.dto.common.user.UpdateUserDTo;
 import cn.rui0.core.model.dto.common.user.UserInfoDTO;
 import cn.rui0.core.model.dto.common.user.UserRegisterDTO;
 import cn.rui0.core.model.po.common.User;
+import cn.rui0.core.model.vo.common.UserInfoVo;
+import cn.rui0.core.model.vo.common.UserVo;
 import cn.rui0.core.service.common.InfoService;
 import cn.rui0.core.service.common.UserService;
 import io.swagger.annotations.Api;
@@ -47,7 +49,7 @@ public class AdminController {
     @ApiImplicitParam(paramType = "header", name = "Authorization", value = "身份认证Token")
     @Access(roles = {"admin"})
     public ResponseResult getUserList(@CurrentUser User user) {
-        List<User> userList =userService.getUser();
+        List<UserInfoVo> userList =userService.getUser();
         return ResponseResult.e(ResponseCode.OK,userList);
     }
 
